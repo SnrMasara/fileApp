@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Update3PostTable extends Migration
+class UpdatecustomeridPostTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class Update3PostTable extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
 
-            $table->string('country')->change();
+            $table->string('customerid')->change();
         });
     }
 
@@ -26,6 +26,6 @@ class Update3PostTable extends Migration
      */
     public function down()
     {
-
+        //
     }
 }

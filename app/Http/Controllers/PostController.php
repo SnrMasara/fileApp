@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\post;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -13,67 +13,27 @@ class PostController extends Controller
    }
 
    //Store Files to database
-   public function store(Request $request){
-    // getting the file
-    $upload=$request->file('upload-file');
-    $filePath=$upload->getRealPath();
+   public function store(Request $request)
+   {
 
-    // Opening and Reading the file
-    $file=fopen($filePath, 'r');
+    $request->validate([
+    'uploadfile' => 'required|mimes:csv,txt'
+    ]);
 
-    //Reading only the header area
-    $header = fgetcsv($file);
+    $file = file($request->file->getRealPath());
 
-    $escapedHeader=[];
+    $data = array_slice($file, 1);
 
-    // Validation
-    foreach ($header as $key => $value) {
-        $lheader=strtolower($value);
-        $escapedItem=preg_replace('/[^a-z]/','', $lheader);
-        array_push($escapedHeader, $escapedItem);
+    $parts = (array_chunk($data,500));
+
+    foreach ($parts as $index=>$part)
+    {
+        $filename = resource_path('pending-files/'.date('y-m-d-H-i-s').$index. '.csv');
+        file_put_contents($filename, $part);
 
     }
-
-    // Loop through to acquire other columns
-
-        while ($columns = fgetcsv($file)) {
-            if ($columns[0]=="") {
-                continue;
-            }
-
-    // Trimming Data
-            foreach ($columns as $key => &$value) {
-                $value=preg_replace('~/\D~','', $value);
-            }
-        $data = array_combine($escapedHeader,$columns);
-
-        //Datatypes setup
-
-        foreach ($data as $key => $value) {
-            $value=($key=="invoiceno" || $key=="stockcode")?(string) $value:(string)$value;
-
-
-        }
-        // Update the table
-        $invoiceno=$data['invoiceno'];
-        $stockcode=$data['stockcode'];
-        $description=$data['description'];
-        $quantity=$data['quantity'];
-        $invoicedate=$data['invoicedate'];
-        $unitprice=$data['unitprice'];
-        $customerid=$data['customerid'];
-        $country=$data['country'];
-
-        $post= post::firstOrNew(['invoiceno'=>$invoiceno, 'stockcode'=>$stockcode]);
-        $post->description=$description;
-        $post->quantity=$quantity;
-        $post->invoicedate=$invoicedate;
-        $post->unitprice=$unitprice;
-        $post->customerid=$customerid;
-        $post->country=$country;
-        $post->save();
-        }
-
+    session()->flash('status', 'queued for importing');
+    return redirect("/");
 
    }
 }

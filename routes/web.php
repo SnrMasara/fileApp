@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[PostController::class,'index']);
 Route::post('/',[PostController::class,'store']);
+
+Route::get('/', function () {
+
+    (new Post())-> importToDb();
+    //dd('done');
+    return view('index');
+
+});
 
