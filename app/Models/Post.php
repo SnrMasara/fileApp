@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Jobs\ProcessCsvUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Symfony\Component\Process\Process;
 
 class Post extends Model
 {
@@ -20,18 +18,16 @@ public function importToDb(){
 
         $g = glob($path);
 
-        foreach (array_slice($g, 0, 1) as $file) {
+        foreach (array_slice($g, 0, 2) as $file) {
 
-            //dump('processing this file:...', $this->file);
+            dump('processing this file:...', $this->file);
 
             $data = array_map('str_getcsv', file($file));
 
             foreach ($data as $row) {
-
-            Post::updateOrCreate([
+                self::updateOrCreate([
                     'invoiceno'=>$row[0]
                 ],
-
                 [
                     'stockcode' => $row[1],
                     'description' => $row[2],
@@ -44,9 +40,9 @@ public function importToDb(){
                 ]);
             }
 
-            //dump('done processing this file:...', $this->file);
+            dump('done processing this file:...', $this->file);
 
-            unlink($this->$file);
+            unlink($file);
         }
     }
 }

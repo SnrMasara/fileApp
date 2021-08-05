@@ -17,14 +17,14 @@ class PostController extends Controller
    {
 
     $request->validate([
-    'uploadfile' => 'required|mimes:csv,txt'
+    'file-name' => 'required|mimes:csv,txt'
     ]);
 
     $file = file($request->file->getRealPath());
 
     $data = array_slice($file, 1);
 
-    $parts = (array_chunk($data,500));
+    $parts = (array_chunk($data, 500));
 
     foreach ($parts as $index=>$part)
     {
