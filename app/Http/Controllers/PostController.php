@@ -50,7 +50,7 @@ class PostController extends Controller
         //Datatypes setup
 
         foreach ($data as $key => $value) {
-            $value=($key=="invoiceno" || $key=="stockcode")?(string) $value:(float)$value;
+            $value=($key=="invoiceno" || $key=="stockcode")?(string) $value:(string)$value;
 
 
         }
@@ -72,19 +72,6 @@ class PostController extends Controller
         $post->customerid=$customerid;
         $post->country=$country;
         $post->save();
-
-        if ($post) {
-            return redirect()
-                ->back()
-                ->with('success', 'File uploaded successfully!');
-        }
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'There was a failure while Uploading!');
-
-
         }
 
 
