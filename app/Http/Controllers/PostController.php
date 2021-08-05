@@ -52,6 +52,7 @@ class PostController extends Controller
         foreach ($data as $key => $value) {
             $value=($key=="invoiceno" || $key=="stockcode")?(string) $value:(float)$value;
 
+
         }
         // Update the table
         $invoiceno=$data['invoiceno'];
@@ -72,6 +73,16 @@ class PostController extends Controller
         $post->country=$country;
         $post->save();
 
+        if ($post) {
+            return redirect()
+                ->back()
+                ->with('success', 'File uploaded successfully!');
+        }
+
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'There was a failure while Uploading!');
 
 
         }
