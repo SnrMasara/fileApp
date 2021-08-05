@@ -2,7 +2,7 @@
     @section('content')
 <form action="{{url('/')}}" method="post" enctype="multipart/form-data">
     {{ csrf_field()}}
-    <div class="form-group">
+    <div class="form-group {{$errors->has('file')? 'has-error' : ''}}">
         <div
         class="py-20
                 h-screen
@@ -35,7 +35,13 @@
                             </div>
                     <div class="mb-2">
                         <span>Attachment Area</span>
-                        <div class="relative h-40 rounded-lg border-dashed border-2 border-gray-200 bg-white flex justify-center items-center hover:cursor-pointer">
+                        <div class="relative h-40
+                                    rounded-lg border-dashed
+                                    border-2 border-gray-200
+                                    bg-white flex justify-center
+                                    items-center hover:cursor-pointer
+
+                                    ">
                             <div class="absolute">
                                 <div class="flex flex-col items-center ">
                                     <i class="fa fa-cloud-upload fa-3x text-gray-200"></i>
@@ -49,8 +55,20 @@
                                     w-full
                                     opacity-5
                                     form-control"
-                                    name="upload-file">
-                        </div>
+                                    required
+                                    name="file">
+
+
+                    @if ($errors->has('file'))
+                    <span class="help-block">
+                        <strong>
+                            {{$errors->first('file')}}
+                        </strong>
+                    </span>
+
+                    @endif
+                            </div>
+
                         <div class="flex justify-between items-center text-gray-400">
                             <span> Accepted file type:.csv only </span>
                             <span class="flex items-center ">
