@@ -17,7 +17,7 @@
                     md:max-w-lg">
         <div class="md:flex">
 
-        <div class="w-full">
+        <div class="">
 
             <div class="p-4 border-b-2">
                 <span class="text-lg font-bold text-gray-600">Add file to upload</span>
